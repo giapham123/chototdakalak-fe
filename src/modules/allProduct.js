@@ -2,63 +2,64 @@ import React, { useEffect, useState } from 'react';
 import { Dimensions } from 'react-native';
 import '../css/homeStyle.css'
 import { Card, Button, List, Skeleton } from 'antd';
-import { home1 } from '../lsData/homeData'
-import { xeData } from '../lsData/xeData'
-import { dodientuData } from '../lsData/dodientuData'
 import { Link } from 'react-router-dom';
-
+import { useSelector, useDispatch } from 'react-redux'
+import { showAllProductViaCategory } from '../actions/showAllProducts'
+var count = 1;
 function AllProduct() {
+    const dispatch = useDispatch()
     const { pathname } = window.location
     const { Meta } = Card;
     const [initLoading, setInitLoading] = useState(true);
     const [loading, setLoading] = useState(false);
     const [list, setList] = useState([]);
-    const getPath = () => {
-        return pathname.split('/')[2]
-    }
+    const [title, setTitle] = useState();
+    const rsProduct = useSelector(state => state.allProduct.data);
+    const rsCate = useSelector(state => state.cate.allCate.data);
+    var titleCate = rsCate.find(el => el.cateCd == pathname.split('/')[2]).cateNm
     useEffect(() => {
+        if(list.length == 0){
+            setList(rsProduct)
+        }
+    }, [rsProduct]);
+    useEffect(() => {
+        setList([])
         setInitLoading(false);
-        if (getPath() == "xe-co") {
-            setList(xeData);
+        var param = {
+            path: pathname.split('/')[2],
+            page: 0
         }
-        else if (getPath() == "do-dien-tu") {
-            setList(dodientuData);
-        } else {
-            setList(home1);
-        }
+        dispatch(showAllProductViaCategory(param))
+        setTitle(titleCate)
     }, [pathname]);
     const onLoadMore = () => {
+        var param = {
+            path: pathname.split('/')[2],
+            page: count++
+        }
         setLoading(true);
         setList(
-            list.concat({
-                img: '',
-                name: '',
-                price: '',
-                loading: true
-            }, {
-                img: '',
-                name: '',
-                price: '',
+            list.concat([...new Array(10)].map(() => ({
+                productId: null,
+                name: null,
+                price: null,
+                desc: null,
+                addr: null,
+                details: null,
+                cateId: null,
+                creDt: null,
+                updDt: null,
+                userId: null,
+                images: null,
+                image: null,
                 loading: true
             }
             ),
-        );
+            )));
+        dispatch(showAllProductViaCategory(param))
         setTimeout(() => {
             setList(
-                list.concat({
-                    img: 'https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png',
-                    name: 'Example 1',
-                    price: '20000',
-                    loading: false
-                },
-                    {
-                        img: 'https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png',
-                        name: 'Example 1',
-                        price: '20000',
-                        loading: false
-                    }
-
-                ),
+                list.concat(rsProduct),
             );
             window.dispatchEvent(new Event('resize'));
             setLoading(false);
@@ -66,7 +67,7 @@ function AllProduct() {
 
     };
     const loadMore =
-        !initLoading && !loading ? (
+       list.length != 0 && !initLoading && !loading ? (
             <div
                 style={{
                     textAlign: 'center',
@@ -83,7 +84,7 @@ function AllProduct() {
     return (
         <>
             <div className='container'>
-                <Card title="Tất Cả Sản Phẩm">
+                <Card title={title}>
                     <List
                         grid={{
                             gutter: 16,
@@ -107,7 +108,7 @@ function AllProduct() {
                                             style={{ height: 300 }}
                                             hoverable
                                             cover={<img width={272} height={200}
-                                                alt="logo" src={item.img} />}
+                                                alt="logo" src={item.image} />}
                                         >
                                             <Meta className='styleMeta' title={item.name} />
                                             <List.Item.Meta title={<div style={{ color: '#B70404' }}>{item.price} VND</div>} description="12h, krong ana, daklak" />

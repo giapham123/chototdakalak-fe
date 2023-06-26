@@ -20,24 +20,36 @@ const items = [
     icon: <UnorderedListOutlined />,
     children: [
       {
-        label: 'Xe Cộ',
-        key: 'all-product/xe-co'
+        label: 'Đồ gia dụng, nội thất, cây cảnh',
+        key: 'all-product/gd_nt_cc'
       },
       {
         label: 'Đồ Điện Tử',
-        key: 'all-product/do-dien-tu'
+        key: 'all-product/dt'
       },
       {
-        label: 'Đồ Gia Dụng, Nội Thất, Cây Cảnh',
-        key: 'all-product/gia-dung-noi-that'
+        label: 'Đồ ăn, thực phẩm và các loại khác',
+        key: 'all-product/da_tp_oth'
       },
       {
-        label: 'Giải Trí, Thể Thao',
-        key: 'all-product/giai-tri-tt'
+        label: 'Mẹ và bé',
+        key: 'all-product/me_be'
       },
       {
-        label: 'Mẹ Và Bé',
-        key: 'all-product/me-be'
+        label: 'Thời trang, Đồ dùng cá nhân',
+        key: 'all-product/tt_dcn'
+      },
+      {
+        label: 'Giải trí, thê thao',
+        key: 'all-product/gt_tt'
+      },
+      {
+        label: 'Đồ dùng văn phòng, công nông nghiệp',
+        key: 'all-product/vp_cnn'
+      },
+      {
+        label: 'Tủ lạnh, máy lạnh, máy giặt',
+        key: 'all-product/tl_ml_mg'
       }
     ],
   }
@@ -77,11 +89,14 @@ function MenuBarComp() {
         <Route exact path='/details' element={< Details />}></Route>
         <Route exact path='/personal-page' element={< PersonalPage />}></Route>
         <Route exact path='/post-page' element={< PostPage />}></Route>
-        <Route exact path='/all-product/xe-co' element={< AllProduct />}></Route>
-        <Route exact path='/all-product/do-dien-tu' element={< AllProduct />}></Route>
-        <Route exact path='/all-product/gia-dung-noi-that' element={< AllProduct />}></Route>
-        <Route exact path='/all-product/giai-tri-tt' element={< AllProduct />}></Route>
-        <Route exact path='/all-product/me-be' element={< AllProduct />}></Route>
+        <Route exact path='/all-product/gd_nt_cc' element={< AllProduct />}></Route>
+        <Route exact path='/all-product/dt' element={< AllProduct />}></Route>
+        <Route exact path='/all-product/da_tp_oth' element={< AllProduct />}></Route>
+        <Route exact path='/all-product/me_be' element={< AllProduct />}></Route>
+        <Route exact path='/all-product/tt_dcn' element={< AllProduct />}></Route>
+        <Route exact path='/all-product/gt_tt' element={< AllProduct />}></Route>
+        <Route exact path='/all-product/vp_cnn' element={< AllProduct />}></Route>
+        <Route exact path='/all-product/tl_ml_mg' element={< AllProduct />}></Route>
       </Routes>
     </>
   );

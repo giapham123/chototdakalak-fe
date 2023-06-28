@@ -3,6 +3,7 @@ import {  persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage' 
 import todosReducer from '../reducers/homeReducer'
 import allProductReducer from '../reducers/showAllProductsReducer'
+import postPageReducer from '../reducers/postPageReducer'
 
 
 const persistConfig = {
@@ -12,7 +13,8 @@ const persistConfig = {
 }
 const rootReducer = combineReducers({
     cate: todosReducer,
-    allProduct: allProductReducer
+    allProduct: allProductReducer,
+    postPage: postPageReducer
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

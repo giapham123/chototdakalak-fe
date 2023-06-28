@@ -1,67 +1,76 @@
 import React, { useEffect, useState } from 'react';
 import { Dimensions } from 'react-native';
 import '../css/homeStyle.css'
+import { useSelector, useDispatch } from 'react-redux'
 import { MinusCircleOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import { Card, Row, Col, Button, Space, List, Skeleton, Form, Input, Select, Typography, Upload } from 'antd';
 import Address from './address';
-
-const { TextArea } = Input;
-const { Title } = Typography;
-const { Option } = Select;
-const areas = [
-    {
-        label: 'Xe Cộ',
-        value: 'xeco',
-    },
-    {
-        label: 'Đồ Điện Tử',
-        value: 'dodientu',
-    },
-];
-const sights = {
-    xeco: ['Kích Thước', 'Mẫu Mã', 'Năm Sản Xuất'],
-    dodientu: ['Xuất Sứ', 'Tình Trạng'],
-};
-const normFile = (e) => {
-    if (Array.isArray(e)) {
-        return e;
-    }
-    return e?.fileList;
-};
+import { insertProduct } from '../actions/postPageActions'
 function PostPage() {
+    const dispatch = useDispatch()
+    const rsCate = useSelector(state => state.cate.allCate.data);
     const [isShowDialogAddress, setIsShowDialogAddress] = useState(false)
+    const [fileList, setFileList] = useState();
     const [form] = Form.useForm();
+    const { TextArea } = Input;
+    const { Title } = Typography;
+    const { Option } = Select;
+
+    const details = {
+        gd_nt_cc: ['Tình Trạng', 'Loại Sản Phẩm'],
+        dt: ['Hãng', 'Dòng Máy', 'Tình Trạng', 'Xuất Xứ', 'RAM', 'Ổ Cứng'],
+        da_tp_oth: ['Kích Thước', 'Năm Sản Xuất'],
+        me_be: ['Xuất Sứ', 'Tình Trạng'],
+        tt_dcn: ['Tình Trạng'],
+        gt_tt: ['Xuất Sứ', 'Tình Trạng'],
+        vp_cnn: ['Tình Trạng'],
+        tl_ml_mg: ['Tình Trạng', 'Năm Sản Xuất', 'Hãng', 'Công Suất']
+    };
+    const normFile = (e) => {
+        if (Array.isArray(e)) {
+            return e;
+        }
+        return e?.fileList;
+    };
+    var data = rsCate.map(el => {
+        return {
+            value: el.cateCd,
+            label: el.cateNm
+        }
+    })
     const handleChange = () => {
         form.setFieldsValue({
-            sights: [],
+            details: [],
         });
     };
+    const submitDataEvent = (value) => {
+        var formData = new FormData();
+        var lisFile = new Array();
+        var details = '';
+        for (let i = 0; i < value.detailsProduct.length; i++) {
+            details += value.detailsProduct[i].name + ':' + value.detailsProduct[i].desc + ';'
+        }
+        value.details = details
+        lisFile.push(fileList[0].originFileObj)
+        for (let i = 0; i < fileList.length; i++) {
+            formData.append('images', fileList[i].originFileObj)
+        }
+    
+        var postData = JSON.stringify(value);
+        formData.append('data', postData)
+        dispatch(insertProduct(formData))
+    }
     const onClose = () => {
         setIsShowDialogAddress(false)
     }
-    const onTest = (data) => {
-        console.log(data);
+    const dataInAddree = (data) => {
+        form.setFieldsValue({
+            address: data
+        });
     };
-
-    const [fileList, setFileList] = useState();
-    const onPreview = async (file) => {
-        let src = file.url;
-        if (!src) {
-            src = await new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file.originFileObj);
-                reader.onload = () => resolve(reader.result);
-            });
-        }
-        const image = new Image();
-        image.src = src;
-        const imgWindow = window.open(src);
-        imgWindow?.document.write(image.outerHTML);
-    };
-    const handleClick = () => {
-        console.log(isShowDialogAddress)
+    const handleChangeImage = ({ fileList: newFileList }) => setFileList(newFileList);
+    const openPopupAddress = () => {
         setIsShowDialogAddress(true)
-        // Add your custom logic here
     };
     return (
         <>
@@ -77,10 +86,12 @@ function PostPage() {
                                     style={{ maxWidth: 600, marginTop: 8 }}
                                 >
                                     <Form.Item valuePropName="fileList" getValueFromEvent={normFile}>
-                                        <Upload multiple={true} accept="*.*" action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                                        <Upload multiple={true} accept="image/*" action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                                             listType="picture-card"
                                             fileList={fileList}
-                                            onPreview={onPreview}>
+                                            // onPreview={onPreview}
+                                            maxCount={5}
+                                            onChange={handleChangeImage}>
                                             <div>
                                                 <UploadOutlined />
                                                 <div style={{ marginTop: 8 }}>Upload</div>
@@ -91,26 +102,26 @@ function PostPage() {
                             </Col>
                             <Col xs={22} sm={24} md={24} lg={18} xl={18} align="middle" style={{ Align: "center" }}>
                                 <Form
+                                    onFinish={submitDataEvent}
                                     labelCol={{ span: 4 }}
                                     form={form}
-                                    // wrapperCol={{ span: 14 }}
                                     layout="horizontal"
-                                // style={{ maxWidth: 600 }}
+                                    name="control-hooks"
                                 >
                                     <Title level={3}>Thêm Sản Phẩm Mới</Title>
 
                                     <Form.Item
                                         label="Loại Sản Phẩm"
-                                        name="category"
+                                        name="cateCd"
                                         rules={[{ required: true, message: 'Vui lòng chọn loại sản phẩm' }]}
                                     >
-                                        <Select options={areas} onChange={handleChange} >
+                                        <Select placeholder="Please select a category" options={data} onChange={handleChange} >
                                         </Select>
                                     </Form.Item>
 
                                     <Form.Item
                                         label="Tên Sản Phẩm"
-                                        name="ProductName"
+                                        name="name"
                                         rules={[{ required: true, message: 'Vui lòng nhập tên sản phẩm' }]}
                                     >
                                         <Input />
@@ -126,14 +137,14 @@ function PostPage() {
 
                                     <Form.Item
                                         label="Mô Tả"
-                                        name="description"
+                                        name="desc"
                                         rules={[{ required: true, message: 'Vui lòng nhập mô tả' }]}
                                     >
                                         <TextArea rows={4} />
                                     </Form.Item>
                                     <Form.Item
-                                        label="Thông Tin Chi Tiết" name="description" rules={[{ required: true, message: 'Vui lòng nhập mô tả' }]}>
-                                        <Form.List name="sights">
+                                        label="Thông Tin Chi Tiết" rules={[{ required: true, message: 'Vui lòng nhập mô tả' }]}>
+                                        <Form.List name="detailsProduct">
                                             {(fields, { add, remove }) => (
                                                 <>
                                                     {fields.map((field) => (
@@ -141,27 +152,27 @@ function PostPage() {
                                                             <Form.Item
                                                                 noStyle
                                                                 shouldUpdate={(prevValues, curValues) =>
-                                                                    prevValues.area !== curValues.area || prevValues.sights !== curValues.sights
+                                                                    prevValues.area !== curValues.area || prevValues.details !== curValues.details
                                                                 }
                                                             >
                                                                 {() => (
                                                                     <Form.Item
                                                                         {...field}
-                                                                        name={[field.name, 'sight']}
+                                                                        name={[field.name, 'name']}
                                                                         rules={[
                                                                             {
                                                                                 required: true,
-                                                                                message: 'Missing sight',
+                                                                                message: 'Missing name',
                                                                             },
                                                                         ]}
                                                                     >
                                                                         <Select
-                                                                            disabled={!form.getFieldValue('category')}
+                                                                            disabled={!form.getFieldValue('cateCd')}
                                                                             style={{
                                                                                 width: 130,
                                                                             }}
                                                                         >
-                                                                            {(sights[form.getFieldValue('category')] || []).map((item) => (
+                                                                            {(details[form.getFieldValue('cateCd')] || []).map((item) => (
                                                                                 <Option key={item} value={item}>
                                                                                     {item}
                                                                                 </Option>
@@ -173,11 +184,11 @@ function PostPage() {
                                                             <Form.Item
                                                                 {...field}
                                                                 label="Mô Tả"
-                                                                name={[field.name, 'Mô tả']}
+                                                                name={[field.name, 'desc']}
                                                                 rules={[
                                                                     {
                                                                         required: true,
-                                                                        message: 'Missing price',
+                                                                        message: 'Missing Desc',
                                                                     },
                                                                 ]}
                                                             >
@@ -197,14 +208,29 @@ function PostPage() {
                                             )}
                                         </Form.List>
                                     </Form.Item>
-                                    <Form.Item
-                                        label="Địa Chỉ"
-                                        name="address"
-                                        rules={[{ required: true, message: 'Vui lòng nhập địa chỉ' }]}
-                                    >
-                                        <Input onClick={handleClick} />
-                                    </Form.Item>
-                                    <Address isShow={isShowDialogAddress} setIshow={onClose} onTest={onTest} />
+                                    <Row >
+                                        <Col xs={22} sm={18} md={18} lg={18} xl={20}>
+                                            <Form.Item
+                                                name="address"
+                                                label="Địa Chỉ"
+                                                rules={[
+                                                    {
+                                                        required: true,
+                                                    },
+                                                ]}
+                                            >
+                                                <Input disabled />
+                                            </Form.Item>
+                                        </Col>
+                                        <Col xs={4} sm={2} md={2} lg={3} xl={4}>
+                                            <Form.Item>
+                                                <Button type="primary" onClick={openPopupAddress}>
+                                                    Thêm địa chỉ
+                                                </Button>
+                                            </Form.Item>
+                                        </Col>
+                                    </Row>
+                                    <Address isShow={isShowDialogAddress} setIshow={onClose} submitAddresss={dataInAddree} />
                                     <Form.Item>
                                         <Button type="primary" htmlType="submit">
                                             Đăng Bài

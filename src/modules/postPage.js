@@ -3,12 +3,13 @@ import { Dimensions } from 'react-native';
 import '../css/homeStyle.css'
 import { useSelector, useDispatch } from 'react-redux'
 import { MinusCircleOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
-import { Card, Row, Col, Button, Space, List, Skeleton, Form, Input, Select, Typography, Upload } from 'antd';
+import { Card, Row, Col, Button, Space, List, message, Form, Input, Select, Typography, Upload } from 'antd';
 import Address from './address';
 import { insertProduct } from '../actions/postPageActions'
 function PostPage() {
     const dispatch = useDispatch()
     const rsCate = useSelector(state => state.cate.allCate.data);
+    const postPage = useSelector(state => state.postPage);
     const [isShowDialogAddress, setIsShowDialogAddress] = useState(false)
     const [fileList, setFileList] = useState();
     const [form] = Form.useForm();
@@ -43,7 +44,25 @@ function PostPage() {
             details: [],
         });
     };
+    useEffect(() => {
+        if (postPage != null) {
+            if (postPage.success) {
+                form.resetFields();
+                setFileList(null)
+                dispatch({ type: 'product/insertData', payload: null })
+                message.success(postPage.message);
+            } else {
+                message.error(postPage.message);
+            }
+        }
+        // dispatch({ type: 'product/insertData', payload: null })
+
+    }, [postPage]);
     const submitDataEvent = (value) => {
+        if (fileList.length == 0) {
+            message.error("Vui lòng thêm hình ảnh.")
+            return
+        }
         var formData = new FormData();
         var lisFile = new Array();
         var details = '';
@@ -55,7 +74,7 @@ function PostPage() {
         for (let i = 0; i < fileList.length; i++) {
             formData.append('images', fileList[i].originFileObj)
         }
-    
+
         var postData = JSON.stringify(value);
         formData.append('data', postData)
         dispatch(insertProduct(formData))
@@ -86,10 +105,11 @@ function PostPage() {
                                     style={{ maxWidth: 600, marginTop: 8 }}
                                 >
                                     <Form.Item valuePropName="fileList" getValueFromEvent={normFile}>
-                                        <Upload multiple={true} accept="image/*" action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                                        <Upload multiple={true} accept="image/*"
                                             listType="picture-card"
                                             fileList={fileList}
-                                            // onPreview={onPreview}
+                                            beforeUpload={() => false}
+                                            className="image-uploader"
                                             maxCount={5}
                                             onChange={handleChangeImage}>
                                             <div>
@@ -124,7 +144,7 @@ function PostPage() {
                                         name="name"
                                         rules={[{ required: true, message: 'Vui lòng nhập tên sản phẩm' }]}
                                     >
-                                        <Input />
+                                        <Input onInput={e => e.target.value = e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)} />
                                     </Form.Item>
 
                                     <Form.Item
@@ -138,12 +158,13 @@ function PostPage() {
                                     <Form.Item
                                         label="Mô Tả"
                                         name="desc"
+
                                         rules={[{ required: true, message: 'Vui lòng nhập mô tả' }]}
                                     >
-                                        <TextArea rows={4} />
+                                        <TextArea onInput={e => e.target.value = e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)} rows={7} placeholder="Mô tả sản phẩm &#10;Mô tả chi tiết một số đặc điểm của sản phẩm:  &#10;- Sản phẩm: Tên, số lượng, thương hiệu, xuất xứ  &#10;- Thời gian sử dụng  &#10;- Chấp nhận thanh toán  &#10;- Chính sách bảo hành bảo trì" />
                                     </Form.Item>
                                     <Form.Item
-                                        label="Thông Tin Chi Tiết" rules={[{ required: true, message: 'Vui lòng nhập mô tả' }]}>
+                                        label="Thông Tin Chi Tiết" rules={[{ required: true, message: 'Vui lòng nhập thông tin' }]}>
                                         <Form.List name="detailsProduct">
                                             {(fields, { add, remove }) => (
                                                 <>
@@ -216,6 +237,7 @@ function PostPage() {
                                                 rules={[
                                                     {
                                                         required: true,
+                                                        message: 'Vui lòng nhập địa chỉ',
                                                     },
                                                 ]}
                                             >

@@ -77,7 +77,7 @@ const Address = ({ isShow, setIshow, submitAddresss }) => {
                     <Form.Item
                         label="Tỉnh, Thành Phố"
                         name="province"
-                        rules={[{ required: true, message: 'Vui lòng chọn loại sản phẩm' }]}
+                        rules={[{ required: true, message: 'Vui lòng chọn tỉnh, thành phố' }]}
                     >
                         <Select
                             defaultValue={proviceData[0]}
@@ -90,9 +90,9 @@ const Address = ({ isShow, setIshow, submitAddresss }) => {
                     </Form.Item>
 
                     <Form.Item
-                        label="Quận, Huyện, Xã"
+                        label="Quận, Huyện"
                         name="district"
-                        rules={[{ required: true, message: 'Vui lòng chọn loại sản phẩm' }]}
+                        rules={[{ required: true, message: 'Vui lòng chọn quận, huyện' }]}
                     >
                         <Select
                             style={{ width: '100%', paddingTop: '10px' }}
@@ -108,7 +108,7 @@ const Address = ({ isShow, setIshow, submitAddresss }) => {
                     <Form.Item
                         label="Phường, Xã, Thị Trấn"
                         name="street"
-                        rules={[{ required: true, message: 'Vui lòng chọn loại sản phẩm' }]}
+                        rules={[{ required: true, message: 'Vui lòng chọn phường, xã, thị trấn' }]}
                     >
                         <Select
                             style={{ width: '100%', paddingTop: '10px' }}
@@ -123,9 +123,9 @@ const Address = ({ isShow, setIshow, submitAddresss }) => {
                     <Form.Item
                         label="Địa Chỉ Cụ Thể"
                         name="detailsAdd"
-                        rules={[{ required: true, message: 'Vui lòng chọn loại sản phẩm' }]}
+                        rules={[{ required: true, message: 'Vui lòng nhập địa chỉ cụ thể' }]}
                     >
-                        <Input />
+                        <Input onInput={e => e.target.value = e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)}/>
                     </Form.Item>
                 </Form>
             </Modal>

@@ -7,6 +7,7 @@ import AllProduct from './allProduct';
 import Details from './details';
 import PersonalPage from './personalPage';
 import PostPage from './postPage'
+import Login from './login'
 
 const items = [
   {
@@ -57,17 +58,24 @@ const items = [
 function MenuBarComp() {
   const navigate = useNavigate();
   const [current, setCurrent] = useState();
+  const [isShowDialogAddress, setIsShowDialogAddress] = useState(false)
   const onClick = (e) => {
     navigate(e.key)
     setCurrent(e.key);
   };
+  const onClose = () => {
+    setIsShowDialogAddress(false)
+  }
+  const openPopupAddress = () => {
+    setIsShowDialogAddress(true)
+  };
   return (
     <>
       <Row align="middle">
-        <Col xs={2} sm={4} md={6} lg={8} xl={8}>
+        <Col xs={8} sm={8} md={6} lg={8} xl={8}>
           <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} />
         </Col>
-        <Col xs={20} sm={16} md={12} lg={8} xl={8}>
+        <Col xs={10} sm={16} md={12} lg={8} xl={8}>
           <Input placeholder="Tìm Kiếm" />
         </Col>
         <Col style={{ textAlign: "right", paddingRight: "20px" }} xs={2} sm={4} md={6} lg={8} xl={8}>
@@ -77,11 +85,12 @@ function MenuBarComp() {
             </Button>
           </Space>
           <Space className="site-button-ghost-wrapper" wrap style={{ width: '20%' }}>
-            <Button>
+            <Button onClick={openPopupAddress}>
               Tài Khoản
             </Button>
           </Space>
         </Col>
+        <Login isShow={isShowDialogAddress} setIshow={onClose} />
       </Row>
 
       <Routes>

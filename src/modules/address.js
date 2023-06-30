@@ -59,7 +59,7 @@ const Address = ({ isShow, setIshow, submitAddresss }) => {
         <div>
             <Modal
                 title="Địa Chỉ"
-                visible={isShow}
+                open={isShow}
                 onCancel={() => setIshow()}
                 onOk={submitDataEvent}
                 htmlType="submit"

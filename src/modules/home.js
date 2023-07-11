@@ -64,7 +64,9 @@ function Home() {
                         }}
                         dataSource={rsCate.allDataHome.data}
                         renderItem={(item) => (
-                            <Link to="/details">
+                            <Link to={{
+                                pathname: `/details/${item.productId}`
+                            }}>
                                 <List.Item>
                                     <Card
                                         style={{ height: 300 }}

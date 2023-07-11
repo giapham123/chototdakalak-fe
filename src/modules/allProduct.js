@@ -18,7 +18,7 @@ function AllProduct() {
     const rsCate = useSelector(state => state.cate.allCate.data);
     var titleCate = rsCate.find(el => el.cateCd == pathname.split('/')[2]).cateNm
     useEffect(() => {
-        if(list.length == 0){
+        if (list.length == 0) {
             setList(rsProduct)
         }
     }, [rsProduct]);
@@ -67,7 +67,7 @@ function AllProduct() {
 
     };
     const loadMore =
-       list.length != 0 && !initLoading && !loading ? (
+        list.length != 0 && !initLoading && !loading ? (
             <div
                 style={{
                     textAlign: 'center',
@@ -101,7 +101,9 @@ function AllProduct() {
                         loadMore={loadMore}
                         dataSource={list}
                         renderItem={(item, index) => (
-                            <Link to="/details">
+                            <Link to={{
+                                pathname: `/details/${item.productId}`
+                            }} >
                                 <List.Item key={index}>
                                     <Skeleton avatar title={false} loading={item.loading} active>
                                         <Card

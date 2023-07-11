@@ -84,7 +84,7 @@ function PostPage() {
     }
     const dataInAddree = (data) => {
         form.setFieldsValue({
-            address: data
+            addr: data
         });
     };
     const handleChangeImage = ({ fileList: newFileList }) => setFileList(newFileList);
@@ -232,7 +232,7 @@ function PostPage() {
                                     <Row >
                                         <Col xs={22} sm={18} md={18} lg={18} xl={20}>
                                             <Form.Item
-                                                name="address"
+                                                name="addr"
                                                 label="Địa Chỉ"
                                                 rules={[
                                                     {

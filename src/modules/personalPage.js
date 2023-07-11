@@ -48,7 +48,9 @@ function PersonalPage() {
                                 }}
                                 dataSource={home1}
                                 renderItem={(item) => (
-                                     <Link to="/details">
+                                     <Link to={{
+                                        pathname: `/details/${item.productId}`
+                                    }}>
                                     <List.Item>
                                         <Card
                                             style={{ height: 300 }}

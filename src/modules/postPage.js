@@ -52,7 +52,7 @@ function PostPage() {
                 dispatch({ type: 'product/insertData', payload: null })
                 message.success(postPage.message);
             } else {
-                message.error(postPage.message);
+                // message.error(postPage.message);
             }
         }
         // dispatch({ type: 'product/insertData', payload: null })

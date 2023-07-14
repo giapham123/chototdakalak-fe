@@ -107,13 +107,13 @@ function AllProduct() {
                                 <List.Item key={index}>
                                     <Skeleton avatar title={false} loading={item.loading} active>
                                         <Card
-                                            style={{ height: 300 }}
+                                            // style={{ height: 300 }}
                                             hoverable
                                             cover={<img width={272} height={200}
                                                 alt="logo" src={item.image} />}
                                         >
                                             <Meta className='styleMeta' title={item.name} />
-                                            <List.Item.Meta title={<div style={{ color: '#B70404' }}>{item.price} VND</div>} description="12h, krong ana, daklak" />
+                                            <List.Item.Meta title={<div style={{ color: '#B70404' }}>{item.price} VND</div>} description={item.addr.split([";"])[2]} />
                                         </Card>
                                     </Skeleton>
                                 </List.Item>

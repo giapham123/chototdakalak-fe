@@ -5,7 +5,6 @@ import '../css/homeStyle.css'
 import '../css/detailsStyle.css'
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
-import { home1 } from '../lsData/homeData'
 import { Link } from 'react-router-dom';
 import { getDetailsProduct } from '../actions/detailsAction'
 import { useSelector, useDispatch } from 'react-redux'
@@ -14,77 +13,47 @@ const Details = () => {
     const { pathname } = window.location
     const dispatch = useDispatch()
     const { Meta } = Card;
-    const list = []
-    const rsDetailsProduct = useSelector(state => state.detailsProduct);
+    const rsDetailsProduct = useSelector(state => state.detailsProduct.productData);
+    const rsRelated = useSelector(state => state.detailsProduct.relatedData);
     const [images, setImages] = useState([])
     const [productInf, setProductInf] = useState({})
     const [details, setDetails] = useState([])
     useEffect(() => {
+        setDetails([])
+        setImages([])
+        setProductInf({})
         dispatch(getDetailsProduct(pathname.split('/')[2]))
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: "smooth"
+          });
     }, [pathname]);
     useEffect(() => {
+        setDetails([])
+        setImages([])
+        setProductInf({})
         if (images.length == 0) {
-            setImages(rsDetailsProduct.data.images)
-            setProductInf(rsDetailsProduct.data)
+            setImages(rsDetailsProduct.images)
+            setProductInf(rsDetailsProduct)
             var arrDetails = []
-            for (let i = 0; i < rsDetailsProduct.data.details.split(';').length; i++) {
+            for (let i = 0; i < rsDetailsProduct.details.split(';').length - 1; i++) {
                 arrDetails.push({
-                    key: rsDetailsProduct.data.details.split(';')[i].split(':')[0],
-                    value: rsDetailsProduct.data.details.split(';')[i].split(':')[1]
+                    key: rsDetailsProduct.details.split(';')[i].split(':')[0],
+                    value: rsDetailsProduct.details.split(';')[i].split(':')[1]
                 })
             }
             setDetails(arrDetails)
-
         }
     }, [rsDetailsProduct]);
 
-    home1.forEach((product) => {
-        list.push(
-            <Col span={8} className='itemsCss'>
-                <Card
-                    cover={<img alt="example" src='https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png' />}
-                >
-                    <Meta className='styleMeta' title={product.name} description={product.price} />
-                </Card>
-            </Col>
-        )
-    })
-
-    const data = Array.from({
-        length: 1,
-    }).map((_, i) => ({
-        href: '/personal-page',
-        title: `SHOP NGUYEN VAN A ${i}`,
-        avatar: `https://xsgames.co/randomusers/avatar.php?g=pixel&key=${i}`,
-        description:
-            'Provide product for abcfjd',
-        content:
-            'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-    }));
-    const data1 = [
-        {
-            title: 'Ant Design Title 1',
-        },
-        {
-            title: 'Ant Design Title 2',
-        },
-        {
-            title: 'Ant Design Title 2',
-        },
-        {
-            title: 'Ant Design Title 2',
-        },
-        {
-            title: 'Ant Design Title 2',
-        }
-    ];
     return (
         <div className='container'>
             <Row >
-                <Col xs={22} sm={12} md={12} lg={12} xl={10}>
-                    <Carousel showArrows={true}>
-                        {images.map((item, index) => (<div key={index}>
-                            <img src={item} />
+                <Col xs={22} sm={12} md={12} lg={12} xl={10} >
+                    <Carousel autoPlay>
+                        {images.map((item, index) => (<div key={index}  style={{height:"450px"}}>
+                            <img src={item}  style={{height: "100%", width: "100%", objectFit: 'contain'}}/>
                         </div>))}
                     </Carousel>
                 </Col>
@@ -97,7 +66,7 @@ const Details = () => {
                         >
                             <List.Item.Meta
                                 avatar={<Avatar src={productInf.imageShop} />}
-                                title={<a href={productInf.productId}>{productInf.shopNm}</a>}
+                                title={<a href={"/personal-page/"+productInf.userId}>{productInf.shopNm}</a>}
                                 description={productInf.descShop}
                             />
                             <List>
@@ -151,20 +120,20 @@ const Details = () => {
                             xl: 5,
                             xxl: 3,
                         }}
-                        dataSource={home1}
+                        dataSource={rsRelated}
                         renderItem={(item, index) => (
                             <Link to={{
                                 pathname: `/details/${item.productId}`
                             }}>
                                 <List.Item key={index}>
                                     <Card
-                                        style={{ height: 300 }}
+                                        // style={{ height: 300 }}
                                         hoverable
                                         cover={<img width={272} height={200}
-                                            alt="logo" src={item.img} />}
+                                            alt="logo" src={item.image} />}
                                     >
                                         <Meta className='styleMeta' title={item.name} />
-                                        <List.Item.Meta title={<div style={{ color: '#B70404' }}>{item.price}</div>} description="12h, krong ana, daklak" />
+                                        <List.Item.Meta title={<div style={{ color: '#B70404' }}>{item.price}</div>} description={item.addr.split([";"])[2]} />
                                     </Card>
                                 </List.Item>
                             </Link>

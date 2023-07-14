@@ -125,7 +125,7 @@ function MenuBarComp() {
       <Routes>
         <Route exact path='/' element={< Home />}></Route>
         <Route exact path='/details/:id' element={< Details />}></Route>
-        <Route exact path='/personal-page' element={< PersonalPage />}></Route>
+        <Route exact path='/personal-page/:userId' element={< PersonalPage />}></Route>
         <Route exact path='/post-page' element={< PostPage />}></Route>
         <Route exact path='/all-product/gd_nt_cc' element={< AllProduct />}></Route>
         <Route exact path='/all-product/dt' element={< AllProduct />}></Route>

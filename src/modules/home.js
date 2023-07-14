@@ -69,13 +69,13 @@ function Home() {
                             }}>
                                 <List.Item>
                                     <Card
-                                        style={{ height: 300 }}
+                                        // style={{ height: 300 }}
                                         hoverable
                                         cover={<img width={272} height={200}
                                             alt="logo" src={item.image} />}
                                     >
                                         <Meta className='styleMeta' title={item.name} />
-                                        <List.Item.Meta title={<div style={{ color: '#B70404' }}>{item.price}</div>} description="5 phút trước, Krong Ana" />
+                                        <List.Item.Meta title={<div style={{ color: '#B70404' }}>{item.price}</div>} description={item.addr.split([";"])[2]}/>
                                     </Card>
                                 </List.Item>
                             </Link>

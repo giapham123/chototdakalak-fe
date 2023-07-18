@@ -6,6 +6,7 @@ import allProductReducer from '../reducers/showAllProductsReducer'
 import postPageReducer from '../reducers/postPageReducer'
 import detailsReducer from '../reducers/detailsReducer'
 import personalReducer from '../reducers/personalReducer'
+import loginReducer from '../reducers/loginReducer'
 
 
 const persistConfig = {
@@ -18,7 +19,8 @@ const rootReducer = combineReducers({
     allProduct: allProductReducer,
     postPage: postPageReducer,
     detailsProduct:detailsReducer,
-    personal:personalReducer
+    personal:personalReducer,
+    login:loginReducer
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

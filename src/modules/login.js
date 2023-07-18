@@ -2,18 +2,35 @@ import { Button, Checkbox, Form, Input, Modal } from 'antd';
 import React, { useEffect, useState } from 'react';
 import '../css/login.css'
 import Regis from './regis'
+import { login } from '../actions/loginAction'
+import { useSelector, useDispatch } from 'react-redux'
+import Service from '../service';
+import axios from 'axios';
 
 const Login = ({ isShow, setIshow }) => {
+    const dispatch = useDispatch()
+    const loginState = useSelector(state => state.login);
     const [isShowDialogRegis, setIsShowDialogRegis] = useState(false)
+    useEffect(() => {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${loginState.token}`;
+        Service.setToken(loginState.token)
+    }, [loginState]);
     const hideLogin = () => {
         setIshow(false);
     };
     const onClose = () => {
         setIsShowDialogRegis(false)
-      }
-      const openPopupRegis = () => {
+    }
+    const openPopupRegis = () => {
         setIsShowDialogRegis(true)
-      };
+    };
+    const handleLogin = () => {
+        var param = {
+            "login":"giapham123@gmail.com",
+            "password":"giapham123"
+        }
+        dispatch(login(param))
+    }
     return (
         <div >
             <Modal
@@ -24,7 +41,7 @@ const Login = ({ isShow, setIshow }) => {
             >
                 <Form
                     name="regis-form"
-                // onFinish={handleLogin}
+                    onFinish={handleLogin}
                 >
                     <Form.Item
                         name="username"

@@ -1,5 +1,5 @@
-import { UnorderedListOutlined, HomeOutlined, MenuOutlined, LoginOutlined, SearchOutlined } from '@ant-design/icons';
-import { Menu, Input, Col, Button, Space, Row } from 'antd';
+import { UnorderedListOutlined, HomeOutlined, MenuOutlined, LoginOutlined, PlusSquareOutlined, UserOutlined } from '@ant-design/icons';
+import { Menu, Input, Col, Button, Space, Row, Avatar } from 'antd';
 import { useState } from 'react';
 import { Routes, Route, useNavigate, Link } from 'react-router-dom';
 import Home from './home';
@@ -9,7 +9,8 @@ import PersonalPage from './personalPage';
 import PostPage from './postPage'
 import Login from './login'
 import { BottomNavigation } from 'reactjs-bottom-navigation'
-
+import { useSelector, useDispatch } from 'react-redux'
+import { useEffect } from 'react';
 
 const items = [
   {
@@ -60,17 +61,33 @@ const items = [
 function MenuBarComp() {
   const navigate = useNavigate();
   const [current, setCurrent] = useState();
-  const [isShowDialogAddress, setIsShowDialogAddress] = useState(false)
+  const [isShowDialogAddress, isShowDialogLogin] = useState(false)
+  const loginState = useSelector(state => state.login);
   const onClick = (e) => {
     navigate(e.key)
     setCurrent(e.key);
   };
   const onClose = () => {
-    setIsShowDialogAddress(false)
+    isShowDialogLogin(false)
   }
   const openPopupAddress = () => {
-    setIsShowDialogAddress(true)
+    if (tokenIsExpired() == true) {
+
+    } else {
+      isShowDialogLogin(true)
+    }
+    // isShowDialogLogin(true)
   };
+  useEffect(() => {
+    isShowDialogLogin(false)
+}, [loginState]);
+  const tokenIsExpired = () => {
+    if (localStorage.getItem("token") == null) {
+      return false
+    }
+    return true
+  }
+
   const bottomNavItems = [
     {
       title: "Trang Chủ",
@@ -80,17 +97,43 @@ function MenuBarComp() {
     },
     {
       title: "Đăng Tin",
-      icon: <HomeOutlined />,
-      onClick: () => { navigate('/post-page') },
-      activeIcon: <HomeOutlined color="#fff" />
+      icon: <PlusSquareOutlined />,
+      onClick: () => {
+        if (tokenIsExpired()) {
+          navigate('/post-page')
+        }
+        else {
+          openPopupAddress()
+        }
+      },
+      activeIcon: <PlusSquareOutlined color="#fff" />
     },
     {
       title: "Đăng Nhập",
-      icon: <HomeOutlined />,
-      onClick: () => openPopupAddress(),
-      activeIcon: <HomeOutlined color="#fff" />
+      icon: <LoginOutlined />,
+      onClick: () => {
+        if (tokenIsExpired() == true) {
+
+        } else {
+          openPopupAddress()
+        }
+        // Modal.error({
+        //   title: 'Lỗi',
+        //   content: 'Vui Lòng Đăng Nhập',
+        // });
+      },
+      activeIcon: <LoginOutlined color="#fff" />,
+      render: () => tokenIsExpired() == true ? <Avatar size="small" src={loginState.userDetail.image} icon={<UserOutlined />} /> : <LoginOutlined color="#fff" />,
     },
   ];
+  const handlePostBtn = () => {
+    if (tokenIsExpired()) {
+      navigate('/post-page')
+    }
+    else {
+      openPopupAddress()
+    }
+  }
   return (
     <>
       <Row align="middle">
@@ -102,14 +145,16 @@ function MenuBarComp() {
         </Col>
         <Col style={{ textAlign: "right", paddingRight: "20px" }} xs={0} sm={0} md={0} lg={8} xl={8}>
           <Space className="site-button-ghost-wrapper" style={{ textAlign: "right", paddingRight: "20px" }} wrap>
-            <Button>
-              <Link to='/post-page'>Đăng Tin</Link>
+            <Button onClick={handlePostBtn}>
+              Đăng Tin
+              {/* <Link to='/post-page'>Đăng Tin</Link> */}
             </Button>
           </Space>
           <Space className="site-button-ghost-wrapper" wrap style={{ width: '20%' }}>
-            <Button onClick={openPopupAddress}>
+            {tokenIsExpired() == true ? <Avatar size="large" src={loginState.userDetail.image} icon={<UserOutlined />} /> : <Button onClick={openPopupAddress}>
               Tài Khoản
-            </Button>
+            </Button>}
+
           </Space>
         </Col>
         <Login isShow={isShowDialogAddress} setIshow={onClose} />

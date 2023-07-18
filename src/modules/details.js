@@ -18,10 +18,11 @@ const Details = () => {
     const [images, setImages] = useState([])
     const [productInf, setProductInf] = useState({})
     const [details, setDetails] = useState([])
+    
     useEffect(() => {
-        setDetails([])
-        setImages([])
-        setProductInf({})
+        // setDetails([])
+        // setImages([])
+        // setProductInf({})
         dispatch(getDetailsProduct(pathname.split('/')[2]))
         window.scrollTo({
             top: 0,
@@ -90,7 +91,7 @@ const Details = () => {
                             </List>
                             <Row>
                                 <Col align="middle" style={{ textAlign: "center", paddingBottom: "10px" }}>
-                                    <CloseSquareOutlined /> {productInf.addr}
+                                    <b>Địa Chỉ: {productInf.addr}</b>
                                 </Col>
                             </Row>
                             <Row>
@@ -100,6 +101,7 @@ const Details = () => {
                             </Row>
                             <Row>
                                 <Col align="middle" style={{ textAlign: "left", paddingBottom: "10px" }}>
+                                    <b>Mô Tả</b> <br/>
                                     <Text>{productInf.desc}</Text>
                                 </Col>
                             </Row>

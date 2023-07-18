@@ -6,7 +6,9 @@ export default class Service {
   static requestInterceptors;
 
   static setToken(token) {
-    axios.defaults.headers.common['Authorization'] = `${token}`;
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    
+    // axios.defaults.headers.common['Authorization'] =  'Bearer ' + token;
   }
 
   static removeToken() {
@@ -25,6 +27,7 @@ export default class Service {
   constructor(namespace) {
     // Accept */*
     axios.defaults.headers.common['Accept'] = '*/*';
+    axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
     // const endpoint = process.env.VUE_APP_SERVICE_ENDPOINT || '';
     const endpoint = 'http://localhost:8091'
     const baseURL = endpoint + (namespace ? `/${namespace}/` : '/');

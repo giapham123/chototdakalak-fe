@@ -20,9 +20,10 @@ const Details = () => {
     const [details, setDetails] = useState([])
     
     useEffect(() => {
-        // setDetails([])
-        // setImages([])
-        // setProductInf({})
+        console.log("aaaa")
+        setDetails([])
+        setImages([])
+        setProductInf({})
         dispatch(getDetailsProduct(pathname.split('/')[2]))
         window.scrollTo({
             top: 0,
@@ -31,6 +32,7 @@ const Details = () => {
           });
     }, [pathname]);
     useEffect(() => {
+        console.log("bbbb")
         setDetails([])
         setImages([])
         setProductInf({})

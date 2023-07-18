@@ -1,5 +1,5 @@
-import { UnorderedListOutlined, HomeOutlined, MenuOutlined, LoginOutlined, PlusSquareOutlined, UserOutlined } from '@ant-design/icons';
-import { Menu, Input, Col, Button, Space, Row, Avatar } from 'antd';
+import { UnorderedListOutlined, HomeOutlined, MenuOutlined, LoginOutlined, PlusSquareOutlined,MenuFoldOutlined, UserOutlined,LogoutOutlined } from '@ant-design/icons';
+import { Menu, Input, Col, Button, Space, Row, Avatar, Dropdown } from 'antd';
 import { useState } from 'react';
 import { Routes, Route, useNavigate, Link } from 'react-router-dom';
 import Home from './home';
@@ -11,8 +11,7 @@ import Login from './login'
 import { BottomNavigation } from 'reactjs-bottom-navigation'
 import { useSelector, useDispatch } from 'react-redux'
 import { useEffect } from 'react';
-
-const items = [
+const itemsMenu = [
   {
     label: 'Trang Chủ',
     key: '',
@@ -58,6 +57,18 @@ const items = [
     ],
   }
 ];
+const items = [
+  {
+    label: 'Đăng Xuất',
+    key: '1',
+    icon: <LogoutOutlined />
+  },
+  {
+    label: 'Sản Phẩm',
+    key: '2',
+    icon: <MenuFoldOutlined />
+  }
+]
 function MenuBarComp() {
   const navigate = useNavigate();
   const [current, setCurrent] = useState();
@@ -80,7 +91,7 @@ function MenuBarComp() {
   };
   useEffect(() => {
     isShowDialogLogin(false)
-}, [loginState]);
+  }, [loginState]);
   const tokenIsExpired = () => {
     if (localStorage.getItem("token") == null) {
       return false
@@ -134,11 +145,19 @@ function MenuBarComp() {
       openPopupAddress()
     }
   }
+  const handleMenuClick = (e) => {
+    if(e.key == 1){
+      localStorage.removeItem("token")
+      window.location.reload()
+    }else{
+      navigate('/personal-page/' + loginState.userDetail.id)
+    }
+  };
   return (
     <>
       <Row align="middle">
         <Col xs={8} sm={8} md={6} lg={8} xl={8}>
-          <Menu overflowedIndicator={<MenuOutlined />} onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} />
+          <Menu overflowedIndicator={<MenuOutlined />} onClick={onClick} selectedKeys={[current]} mode="horizontal" items={itemsMenu} />
         </Col>
         <Col xs={16} sm={16} md={12} lg={8} xl={8}>
           <Input placeholder="Tìm Kiếm" />
@@ -151,9 +170,21 @@ function MenuBarComp() {
             </Button>
           </Space>
           <Space className="site-button-ghost-wrapper" wrap style={{ width: '20%' }}>
-            {tokenIsExpired() == true ? <Avatar size="large" src={loginState.userDetail.image} icon={<UserOutlined />} /> : <Button onClick={openPopupAddress}>
-              Tài Khoản
-            </Button>}
+            {tokenIsExpired() == true ?
+              <Dropdown
+                menu={{
+                  items,
+                  onClick: handleMenuClick
+                }}
+                arrow={{
+                  pointAtCenter: true,
+                }}
+              >
+                <Avatar size="large" src={loginState.userDetail.image} icon={<UserOutlined />} />
+              </Dropdown>
+              : <Button onClick={openPopupAddress}>
+                Tài Khoản
+              </Button>}
 
           </Space>
         </Col>

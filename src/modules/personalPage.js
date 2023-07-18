@@ -28,6 +28,7 @@ function PersonalPage() {
         dispatch(getPersonalProduct(pathname.split('/')[2]))
     }, [pathname]);
     useEffect(() => {
+        setList([])
         setInitLoading(false);
         setList(rsPersonal.lsProduct)
     }, [rsPersonal]);

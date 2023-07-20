@@ -6,7 +6,8 @@ import { Link } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import { getPersonalProduct, getPersonalProductPage } from '../actions/personalAction'
-import { Text, View } from "react-native";
+import { getTotalData } from '../actions/showAllProducts'
+
 var count = 1;
 function PersonalPage() {
     const { Meta } = Card;
@@ -18,55 +19,101 @@ function PersonalPage() {
     const [title, setTitle] = useState();
     const rsPersonal = useSelector(state => state.personal.infUser);
     const rsPersonalProduct = useSelector(state => state.personal.productDataUser);
+    const rsTotalData = useSelector(state => state.totalData);
     useEffect(() => {
+        var paramCount = {
+            cateCd: 0,
+            userId: pathname.split('/')[2],
+        }
+        var param = {
+            path: pathname.split('/')[2],
+            page: 0
+        }
+        dispatch(getPersonalProductPage(param))
+        dispatch(getPersonalProduct(pathname.split('/')[2]))
+        dispatch(getTotalData(paramCount))
         setList([])
+        setInitLoading(false);
         window.scrollTo({
             top: 0,
             left: 0,
             behavior: "smooth"
-          });
-        dispatch(getPersonalProduct(pathname.split('/')[2]))
+        });
     }, [pathname]);
     useEffect(() => {
-        setList([])
-        setInitLoading(false);
-        setList(rsPersonal.lsProduct)
-    }, [rsPersonal]);
+        setList(rsPersonalProduct)
+    }, [rsPersonalProduct]);
+
+    useEffect(() => {
+        
+        if (count != 1) {
+            setLoading(true)
+            setList(
+                list.concat([...new Array(3)].map(() => ({
+                    productId: null,
+                    name: null,
+                    price: null,
+                    desc: null,
+                    addr: null,
+                    details: null,
+                    cateId: null,
+                    creDt: null,
+                    updDt: null,
+                    userId: null,
+                    images: null,
+                    image: null,
+                    loading: true
+                }
+                ),
+                )));
+
+            setTimeout(() => {
+                setList(
+                    list.concat(rsPersonalProduct)
+                );
+                window.dispatchEvent(new Event('resize'));
+                setLoading(false);
+            }, 1000);
+        }
+    }, [count]);
     const onLoadMore = () => {
         var param = {
             path: pathname.split('/')[2],
             page: count++
         }
-        setLoading(true);
-        setList(
-            list.concat([...new Array(10)].map(() => ({
-                productId: null,
-                name: null,
-                price: null,
-                desc: null,
-                addr: null,
-                details: null,
-                cateId: null,
-                creDt: null,
-                updDt: null,
-                userId: null,
-                images: null,
-                image: null,
-                loading: true
-            }
-            ),
-            )));
+        console.log(count)
         dispatch(getPersonalProductPage(param))
-        setTimeout(() => {
+        if (count == 1) {
+            setLoading(true);
             setList(
-                list.concat(rsPersonalProduct),
-            );
-            window.dispatchEvent(new Event('resize'));
-            setLoading(false);
-        }, 1000);
+                list.concat([...new Array(3)].map(() => ({
+                    productId: null,
+                    name: null,
+                    price: null,
+                    desc: null,
+                    addr: null,
+                    details: null,
+                    cateId: null,
+                    creDt: null,
+                    updDt: null,
+                    userId: null,
+                    images: null,
+                    image: null,
+                    loading: true
+                }
+                ),
+                )));
 
+            setTimeout(() => {
+                setList(
+                    list.concat(rsPersonalProduct)
+                );
+                window.dispatchEvent(new Event('resize'));
+                setLoading(false);
+            }, 1000);
+        }
     };
-    const loadMore =
+    const loadMore = list.length >= rsTotalData ? null :
         list.length != 0 && !initLoading && !loading ? (
             <div
                 style={{
@@ -79,11 +126,6 @@ function PersonalPage() {
                 <Button onClick={onLoadMore}>loading more</Button>
             </div>
         ) : null;
-    const data = [
-        {
-            title: 'Ant Design Title 1',
-        }
-    ];
     return (
         <>
             <div className='container'>
@@ -100,7 +142,7 @@ function PersonalPage() {
                         }}
                         >
                             <Row>
-                                <Col xs={16} sm={16} md={16} lg={16} xl={12}>
+                                <Col xs={16} sm={16} md={16} lg={16} xl={12} style={{paddingRight:"50px"}}>
                                     <List.Item>
                                         <List.Item.Meta
                                             avatar={<Avatar src={rsPersonal.img} />}
@@ -109,7 +151,7 @@ function PersonalPage() {
                                         />
                                     </List.Item>
                                 </Col>
-                                <Col xs={4} sm={4} md={4} lg={4} xl={4}>
+                                <Col xs={4} sm={4} md={4} lg={4} xl={4} >
                                     <List.Item>
                                         <List.Item.Meta
                                             title="Địa chỉ"
@@ -122,7 +164,7 @@ function PersonalPage() {
                                     <List.Item>
                                         <List.Item.Meta
                                             title="Sản Phẩm"
-                                            description="12000"
+                                            description={rsTotalData}
                                         />
 
                                     </List.Item>
@@ -160,7 +202,7 @@ function PersonalPage() {
                                                         alt="logo" src={item.image} />}
                                                 >
                                                     <Meta className='styleMeta' title={item.name} />
-                                                    <List.Item.Meta title={<div style={{ color: '#B70404' }}>{item.price} VND</div>} description={item.addr.split([";"])[2]} />
+                                                    <List.Item.Meta title={<div style={{ color: '#B70404' }}>{item.price} VND</div>} description={item.addr == null ? null : item.addr.split([";"])[2]} />
                                                 </Card>
                                             </Skeleton>
                                         </List.Item>

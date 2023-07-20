@@ -19,6 +19,12 @@ export default function personalReducer(state = initialState, action) {
                 infUser:action.payload
             }
         }
+        case 'RESET_STATE_PERSONAL_PRODUCT': {
+            return {
+                ...state,
+                productDataUser:action.payload
+            }
+        }
         default:
             return state
     }

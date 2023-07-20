@@ -4,7 +4,7 @@ import '../css/homeStyle.css'
 import { Card, Button, List, Skeleton } from 'antd';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux'
-import { showAllProductViaCategory } from '../actions/showAllProducts'
+import { showAllProductViaCategory, getTotalData } from '../actions/showAllProducts'
 var count = 1;
 function AllProduct() {
     const dispatch = useDispatch()
@@ -16,12 +16,41 @@ function AllProduct() {
     const [title, setTitle] = useState();
     const rsProduct = useSelector(state => state.allProduct.data);
     const rsCate = useSelector(state => state.cate.allCate.data);
+    const rsTotalData = useSelector(state => state.totalData);
     var titleCate = rsCate.find(el => el.cateCd == pathname.split('/')[2]).cateNm
     useEffect(() => {
-        if (list.length == 0) {
-            setList(rsProduct)
-        }
+        setList(rsProduct);
     }, [rsProduct]);
+    useEffect(() => {
+        if (count != 1) {
+            setLoading(true);
+            setList(
+                list.concat([...new Array(3)].map(() => ({
+                    productId: null,
+                    name: null,
+                    price: null,
+                    desc: null,
+                    addr: null,
+                    details: null,
+                    cateId: null,
+                    creDt: null,
+                    updDt: null,
+                    userId: null,
+                    images: null,
+                    image: null,
+                    loading: true
+                }
+                ),
+                )));
+            setTimeout(() => {
+                setList(
+                    list.concat(rsProduct),
+                );
+                window.dispatchEvent(new Event('resize'));
+                setLoading(false);
+            }, 1000);
+        }
+    }, [count]);
     useEffect(() => {
         setList([])
         setInitLoading(false);
@@ -29,44 +58,52 @@ function AllProduct() {
             path: pathname.split('/')[2],
             page: 0
         }
+        var paramCount = {
+            cateCd: pathname.split('/')[2],
+            userId: 0
+        }
         dispatch(showAllProductViaCategory(param))
+        dispatch(getTotalData(paramCount))
         setTitle(titleCate)
     }, [pathname]);
+
     const onLoadMore = () => {
         var param = {
             path: pathname.split('/')[2],
             page: count++
         }
-        setLoading(true);
-        setList(
-            list.concat([...new Array(10)].map(() => ({
-                productId: null,
-                name: null,
-                price: null,
-                desc: null,
-                addr: null,
-                details: null,
-                cateId: null,
-                creDt: null,
-                updDt: null,
-                userId: null,
-                images: null,
-                image: null,
-                loading: true
-            }
-            ),
-            )));
         dispatch(showAllProductViaCategory(param))
-        setTimeout(() => {
+        if (count == 1) {
+            setLoading(true);
             setList(
-                list.concat(rsProduct),
-            );
-            window.dispatchEvent(new Event('resize'));
-            setLoading(false);
-        }, 1000);
+                list.concat([...new Array(3)].map(() => ({
+                    productId: null,
+                    name: null,
+                    price: null,
+                    desc: null,
+                    addr: null,
+                    details: null,
+                    cateId: null,
+                    creDt: null,
+                    updDt: null,
+                    userId: null,
+                    images: null,
+                    image: null,
+                    loading: true
+                }
+                ),
+                )));
 
+            setTimeout(() => {
+                setList(
+                    list.concat(rsProduct),
+                );
+                window.dispatchEvent(new Event('resize'));
+                setLoading(false);
+            }, 1000);
+        }
     };
-    const loadMore =
+    const loadMore = list.length >= rsTotalData ? null :
         list.length != 0 && !initLoading && !loading ? (
             <div
                 style={{
@@ -113,7 +150,7 @@ function AllProduct() {
                                                 alt="logo" src={item.image} />}
                                         >
                                             <Meta className='styleMeta' title={item.name} />
-                                            <List.Item.Meta title={<div style={{ color: '#B70404' }}>{item.price} VND</div>} description={item.addr.split([";"])[2]} />
+                                            <List.Item.Meta title={<div style={{ color: '#B70404' }}>{item.price} VND</div>} description={item.addr == null ? null : item.addr.split([";"])[2]} />
                                         </Card>
                                     </Skeleton>
                                 </List.Item>

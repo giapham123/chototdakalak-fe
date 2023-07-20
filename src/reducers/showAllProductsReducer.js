@@ -7,6 +7,9 @@ export default function allProductReducer(state = initialState, action) {
         case 'allProduct/getAllProduct': {
             return action.payload
         }
+        case 'RESET_STATE_ALLPRODUCT': {
+            return state
+        }
         default:
             return state
     }

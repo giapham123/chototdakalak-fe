@@ -20,7 +20,6 @@ const Details = () => {
     const [details, setDetails] = useState([])
     
     useEffect(() => {
-        console.log("aaaa")
         setDetails([])
         setImages([])
         setProductInf({})
@@ -32,7 +31,6 @@ const Details = () => {
           });
     }, [pathname]);
     useEffect(() => {
-        console.log("bbbb")
         setDetails([])
         setImages([])
         setProductInf({})
@@ -77,7 +75,7 @@ const Details = () => {
                                     {
                                         details.map((listitem, index) => {
                                             return (<Col span={8} key={index}>
-                                                <List.Item >
+                                                {/* <List.Item > */}
                                                     <List.Item.Meta
                                                         avatar={
                                                             <CloseSquareOutlined />
@@ -85,7 +83,7 @@ const Details = () => {
                                                         title={listitem.key}
                                                         description={listitem.value}
                                                     />
-                                                </List.Item>
+                                                {/* </List.Item> */}
                                             </Col>)
                                         })
                                     }
@@ -137,7 +135,7 @@ const Details = () => {
                                             alt="logo" src={item.image} />}
                                     >
                                         <Meta className='styleMeta' title={item.name} />
-                                        <List.Item.Meta title={<div style={{ color: '#B70404' }}>{item.price}</div>} description={item.addr.split([";"])[2]} />
+                                        <List.Item.Meta title={<div style={{ color: '#B70404' }}>{item.price}</div>} description={item.addr == null ? null : item.addr.split([";"])[2]} />
                                     </Card>
                                 </List.Item>
                             </Link>

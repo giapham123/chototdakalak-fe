@@ -1,15 +1,18 @@
 import { Dimensions } from 'react-native';
 import '../css/homeStyle.css'
-import { Card, List, Row, Col, Button, Skeleton, Avatar } from 'antd';
+import { Card, List, Row, Col, Button, Skeleton, Avatar, message, Popconfirm } from 'antd';
 import { home1 } from '../lsData/homeData'
 import { Link } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import { getPersonalProduct, getPersonalProductPage } from '../actions/personalAction'
 import { getTotalData } from '../actions/showAllProducts'
-
+import { deleteProduct, publishProduct } from '../actions/postPageActions'
+import { CloseCircleTwoTone, CheckCircleTwoTone, DeleteTwoTone, EyeTwoTone } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 var count = 1;
-function PersonalPage() {
+function EditPersonalPage() {
+    const navigate = useNavigate();
     const { Meta } = Card;
     const dispatch = useDispatch()
     const { pathname } = window.location
@@ -19,21 +22,23 @@ function PersonalPage() {
     const [title, setTitle] = useState();
     const rsPersonal = useSelector(state => state.personal.infUser);
     const rsPersonalProduct = useSelector(state => state.personal.productDataUser);
+    const rsUpdatePublish = useSelector(state => state.personal.UpdatePublish);
     const rsTotalData = useSelector(state => state.totalData);
     useEffect(() => {
         var paramCount = {
             cateCd: 0,
             userId: pathname.split('/')[2],
-            edit:1
+            edit: 0
         }
         var param = {
             path: pathname.split('/')[2],
             page: 0,
-            edit: 1
+            edit: 0
         }
+
         var param1 = {
             path: pathname.split('/')[2],
-            edit: 1
+            edit: 0
         }
         dispatch(getPersonalProductPage(param))
         dispatch(getPersonalProduct(param1))
@@ -51,7 +56,35 @@ function PersonalPage() {
     }, [rsPersonalProduct]);
 
     useEffect(() => {
-        
+        console.log("update")
+        var paramCount = {
+            cateCd: 0,
+            userId: pathname.split('/')[2],
+            edit:0
+        }
+        var param = {
+            path: pathname.split('/')[2],
+            page: 0,
+            edit: 0
+        }
+        var param1 = {
+            path: pathname.split('/')[2],
+            edit: 0
+        }
+        dispatch(getPersonalProductPage(param))
+        dispatch(getPersonalProduct(param1))
+        dispatch(getTotalData(paramCount))
+        setList([])
+        setInitLoading(false);
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: "smooth"
+        });
+    }, [rsUpdatePublish]);
+
+    useEffect(() => {
+
         if (count != 1) {
             setLoading(true)
             setList(
@@ -86,9 +119,8 @@ function PersonalPage() {
         var param = {
             path: pathname.split('/')[2],
             page: count++,
-            edit: 1
+            edit: 0
         }
-        console.log(count)
         dispatch(getPersonalProductPage(param))
         if (count == 1) {
             setLoading(true);
@@ -149,7 +181,7 @@ function PersonalPage() {
                         }}
                         >
                             <Row>
-                                <Col xs={16} sm={16} md={16} lg={16} xl={12} style={{paddingRight:"50px"}}>
+                                <Col xs={16} sm={16} md={16} lg={16} xl={12} style={{ paddingRight: "50px" }}>
                                     <List.Item>
                                         <List.Item.Meta
                                             avatar={<Avatar src={rsPersonal.img} />}
@@ -197,26 +229,46 @@ function PersonalPage() {
                                 loadMore={loadMore}
                                 dataSource={list}
                                 renderItem={(item, index) => (
-                                    <Link to={{
-                                        pathname: `/details/${item.productId}`
-                                    }} >
-                                        <List.Item key={index}>
-                                            <Skeleton avatar title={false} loading={item.loading} active>
+                                    // <Link to={{
+                                    //     pathname: `/details/${item.productId}`
+                                    // }} >
+                                    <List.Item key={index}>
+                                        <Skeleton avatar title={false} loading={item.loading} active>
+                                            {item.publish == true ?
                                                 <Card
-                                                    // style={{ height: 300 }}
                                                     hoverable
                                                     cover={<img width={272} height={200}
                                                         alt="logo" src={item.image} />}
+                                                    actions={[
+                                                        // <DeleteTwoTone twoToneColor="red" key="delete" />,
+                                                        <CheckCircleTwoTone twoToneColor="#52c41a" key="publish" onClick={() => dispatch(publishProduct({ productId: item.productId }))} />,
+                                                        <EyeTwoTone twoToneColor="#52c41a" key="detail" onClick={() => navigate('/details/' + item.productId)} />
+                                                    ]}
                                                 >
                                                     <Meta className='styleMeta' title={item.name} />
                                                     <List.Item.Meta title={<div style={{ color: '#B70404' }}>{String(item.price).replace(
-                                                    /(\d)(?=(?:\d{3})+(?:\.|$))/g,
-                                                    '$1,'
-                                                )} VND</div>} description={item.addr == null ? null : item.addr.split([";"])[2]} />
-                                                </Card>
-                                            </Skeleton>
-                                        </List.Item>
-                                    </Link>
+                                                        /(\d)(?=(?:\d{3})+(?:\.|$))/g,
+                                                        '$1,'
+                                                    )} VND</div>} description={item.addr == null ? null : item.addr.split([";"])[2]} />
+                                                </Card> : <Card
+                                                    hoverable
+                                                    cover={<img width={272} height={200}
+                                                        alt="logo" src={item.image} />}
+                                                    actions={[
+                                                        // <DeleteTwoTone twoToneColor="red" key="delete" />,
+                                                        <CloseCircleTwoTone twoToneColor="red" key="publish" onClick={() => dispatch(publishProduct({ productId: item.productId }))} />,
+                                                        <EyeTwoTone twoToneColor="#52c41a" key="detail" onClick={() => navigate('/details/' + item.productId)} />
+                                                    ]}
+                                                >
+                                                    <Meta className='styleMeta' title={item.name} />
+                                                    <List.Item.Meta title={<div style={{ color: '#B70404' }}>{String(item.price).replace(
+                                                        /(\d)(?=(?:\d{3})+(?:\.|$))/g,
+                                                        '$1,'
+                                                    )} VND</div>} description={item.addr == null ? null : item.addr.split([";"])[2]} />
+                                                </Card>}
+                                        </Skeleton>
+                                    </List.Item>
+                                    // </Link>
                                 )}
                             />
                         </Card>
@@ -228,4 +280,4 @@ function PersonalPage() {
 }
 const win = Dimensions.get('window');
 
-export default PersonalPage;
+export default EditPersonalPage;

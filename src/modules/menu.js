@@ -8,6 +8,7 @@ import Details from './details';
 import PersonalPage from './personalPage';
 import PostPage from './postPage'
 import Login from './login'
+import EditPersonalPage from './editPersonalPage'
 import { BottomNavigation } from 'reactjs-bottom-navigation'
 import { useSelector, useDispatch } from 'react-redux'
 import { useEffect } from 'react';
@@ -150,7 +151,7 @@ function MenuBarComp() {
       localStorage.removeItem("token")
       window.location.reload()
     }else{
-      navigate('/personal-page/' + loginState.userDetail.id)
+      navigate('/personal/' + loginState.userDetail.id)
     }
   };
   return (
@@ -211,6 +212,7 @@ function MenuBarComp() {
         <Route exact path='/all-product/gt_tt' element={< AllProduct />}></Route>
         <Route exact path='/all-product/vp_cnn' element={< AllProduct />}></Route>
         <Route exact path='/all-product/tl_ml_mg' element={< AllProduct />}></Route>
+        <Route exact path='/personal/:userId' element={< EditPersonalPage />}></Route>
       </Routes>
     </>
   );

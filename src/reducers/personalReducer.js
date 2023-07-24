@@ -2,7 +2,8 @@
 
 const initialState = {
     infUser:{},
-    productDataUser:[]
+    productDataUser:[],
+    UpdatePublish:{}
 }
 
 export default function personalReducer(state = initialState, action) {
@@ -23,6 +24,12 @@ export default function personalReducer(state = initialState, action) {
             return {
                 ...state,
                 productDataUser:action.payload
+            }
+        }
+        case 'UPDATE_PUBLISH': {
+            return {
+                ...state,
+                UpdatePublish:action.payload
             }
         }
         default:

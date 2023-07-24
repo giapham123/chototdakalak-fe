@@ -58,7 +58,7 @@ const Details = () => {
                         </div>))}
                     </Carousel>
                 </Col>
-                <Col xs={22} sm={12} md={12} lg={12} xl={14} align="middle" style={{ textAlign: "left" }}>
+                <Col xs={22} sm={12} md={12} lg={12} xl={14} align="middle" style={{ textAlign: "left", paddingLeft:"50px" }}>
                     <List
                         itemLayout="vertical"
                         size="large"
@@ -135,7 +135,10 @@ const Details = () => {
                                             alt="logo" src={item.image} />}
                                     >
                                         <Meta className='styleMeta' title={item.name} />
-                                        <List.Item.Meta title={<div style={{ color: '#B70404' }}>{item.price}</div>} description={item.addr == null ? null : item.addr.split([";"])[2]} />
+                                        <List.Item.Meta title={<div style={{ color: '#B70404' }}>{String(item.price).replace(
+                                                    /(\d)(?=(?:\d{3})+(?:\.|$))/g,
+                                                    '$1,'
+                                                )}</div>} description={item.addr == null ? null : item.addr.split([";"])[2]} />
                                     </Card>
                                 </List.Item>
                             </Link>

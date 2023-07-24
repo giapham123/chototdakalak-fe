@@ -102,29 +102,7 @@ function PostPage() {
                     <Space direction="vertical" size="middle" style={{ display: 'flex', marginTop: '10px', marginBottom: "10px" }}>
                         <Card>
                             <Row >
-                                <Col xs={24} sm={10} md={8} lg={4} xl={6} align="middle" style={{ Align: "center" }}>
-                                    <Title level={5}>Thêm Hình Ảnh</Title>
-                                    <Form
-                                        labelCol={{ span: 4 }}
-                                        layout="horizontal"
-                                        style={{ maxWidth: 600, marginTop: 8 }}
-                                    >
-                                        <Form.Item valuePropName="fileList" getValueFromEvent={normFile}>
-                                            <Upload multiple={true} accept="image/*"
-                                                listType="picture-card"
-                                                fileList={fileList}
-                                                beforeUpload={() => false}
-                                                className="image-uploader"
-                                                maxCount={5}
-                                                onChange={handleChangeImage}>
-                                                <div>
-                                                    <UploadOutlined />
-                                                    <div style={{ marginTop: 8 }}>Upload</div>
-                                                </div>
-                                            </Upload>
-                                        </Form.Item>
-                                    </Form>
-                                </Col>
+                                
                                 <Col xs={22} sm={24} md={24} lg={18} xl={18} align="middle" style={{ Align: "center" }}>
                                     <Form
                                         onFinish={submitDataEvent}
@@ -265,6 +243,29 @@ function PostPage() {
                                             <Button type="primary" htmlType="submit">
                                                 Đăng Bài
                                             </Button>
+                                        </Form.Item>
+                                    </Form>
+                                </Col>
+                                <Col xs={24} sm={10} md={8} lg={4} xl={6} align="middle" style={{ Align: "center" }}>
+                                    <Title level={5}>Thêm Hình Ảnh</Title>
+                                    <Form
+                                        labelCol={{ span: 4 }}
+                                        layout="horizontal"
+                                        style={{ maxWidth: 600, marginTop: 8 }}
+                                    >
+                                        <Form.Item valuePropName="fileList" getValueFromEvent={normFile}>
+                                            <Upload multiple={true} accept="image/*"
+                                                listType="picture-card"
+                                                fileList={fileList}
+                                                beforeUpload={() => false}
+                                                className="image-uploader"
+                                                maxCount={5}
+                                                onChange={handleChangeImage}>
+                                                <div>
+                                                    <UploadOutlined />
+                                                    <div style={{ marginTop: 8 }}>Upload</div>
+                                                </div>
+                                            </Upload>
                                         </Form.Item>
                                     </Form>
                                 </Col>

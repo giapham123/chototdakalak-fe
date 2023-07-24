@@ -7,3 +7,19 @@ export function insertProduct(param) {
         dispatch({ type: 'product/insertData', payload: response.data })
     }
 }
+
+export function deleteProduct(param) {
+    return async function deleteProduct(dispatch) {
+        const response = await service.get('/admin/delete-product', param)
+        // dispatch({ type: 'product/insertData', payload: response.data })
+    }
+}
+
+export function publishProduct(param) {
+    return async function publishProduct(dispatch) {
+        const response = await service.get('/admin/publish-product', param)
+        console.log(response)
+        dispatch({ type: 'UPDATE_PUBLISH', payload: response.data })
+    }
+}
+

@@ -56,11 +56,13 @@ function AllProduct() {
         setInitLoading(false);
         var param = {
             path: pathname.split('/')[2],
-            page: 0
+            page: 0,
+            edit: 1
         }
         var paramCount = {
             cateCd: pathname.split('/')[2],
-            userId: 0
+            userId: 0,
+            edit: 1
         }
         dispatch(showAllProductViaCategory(param))
         dispatch(getTotalData(paramCount))
@@ -70,7 +72,9 @@ function AllProduct() {
     const onLoadMore = () => {
         var param = {
             path: pathname.split('/')[2],
-            page: count++
+            page: count++,
+            userId: 0,
+            edit: 1
         }
         dispatch(showAllProductViaCategory(param))
         if (count == 1) {
@@ -120,7 +124,7 @@ function AllProduct() {
 
     return (
         <>
-            <div className='container'>
+            <div className='container' style={{paddingTop:"10px"}}>
                 <Card title={title}>
                     <List
                         grid={{
@@ -150,7 +154,10 @@ function AllProduct() {
                                                 alt="logo" src={item.image} />}
                                         >
                                             <Meta className='styleMeta' title={item.name} />
-                                            <List.Item.Meta title={<div style={{ color: '#B70404' }}>{item.price} VND</div>} description={item.addr == null ? null : item.addr.split([";"])[2]} />
+                                            <List.Item.Meta title={<div style={{ color: '#B70404' }}>{String(item.price).replace(
+                                                    /(\d)(?=(?:\d{3})+(?:\.|$))/g,
+                                                    '$1,'
+                                                )} VND</div>} description={item.addr == null ? null : item.addr.split([";"])[2]} />
                                         </Card>
                                     </Skeleton>
                                 </List.Item>

@@ -18,7 +18,6 @@ export function deleteProduct(param) {
 export function publishProduct(param) {
     return async function publishProduct(dispatch) {
         const response = await service.get('/admin/publish-product', param)
-        console.log(response)
         dispatch({ type: 'UPDATE_PUBLISH', payload: response.data })
     }
 }

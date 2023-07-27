@@ -1,7 +1,8 @@
 
 const initialState = {
     token:null,
-    userDetail:{}
+    userDetail:{},
+    failToLogin:{}
 }
 
 export default function loginReducer(state = initialState, action) {
@@ -16,6 +17,12 @@ export default function loginReducer(state = initialState, action) {
             return {
                 ...state,
                 userDetail:action.payload
+            }
+        }
+        case 'LOGIN_FAIL': {
+            return {
+                ...state,
+                failToLogin:action.payload
             }
         }
         default:

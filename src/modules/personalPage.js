@@ -7,6 +7,8 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import { getPersonalProduct, getPersonalProductPage } from '../actions/personalAction'
 import { getTotalData } from '../actions/showAllProducts'
+import moment from 'moment/moment';
+import 'moment/locale/vi'
 
 var count = 1;
 function PersonalPage() {
@@ -21,6 +23,7 @@ function PersonalPage() {
     const rsPersonalProduct = useSelector(state => state.personal.productDataUser);
     const rsTotalData = useSelector(state => state.totalData);
     useEffect(() => {
+        count = 1
         var paramCount = {
             cateCd: 0,
             userId: pathname.split('/')[2],
@@ -212,7 +215,7 @@ function PersonalPage() {
                                                     <List.Item.Meta title={<div style={{ color: '#B70404' }}>{String(item.price).replace(
                                                     /(\d)(?=(?:\d{3})+(?:\.|$))/g,
                                                     '$1,'
-                                                )} VND</div>} description={item.addr == null ? null : item.addr.split([";"])[2]} />
+                                                )} vnd</div>} description={item.addr == null ? null :  moment(item.updDt).startOf('minutes').fromNow().charAt(0).toUpperCase() +  moment(item.updDt).startOf('minutes').fromNow().slice(1) + " " +item.addr.split([";"])[2]} />
                                                 </Card>
                                             </Skeleton>
                                         </List.Item>

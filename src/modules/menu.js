@@ -75,6 +75,7 @@ function MenuBarComp() {
   const [current, setCurrent] = useState();
   const [isShowDialogAddress, isShowDialogLogin] = useState(false)
   const loginState = useSelector(state => state.login);
+  const loginStateToken = useSelector(state => state.login.token);
   const onClick = (e) => {
     navigate(e.key)
     setCurrent(e.key);
@@ -83,16 +84,15 @@ function MenuBarComp() {
     isShowDialogLogin(false)
   }
   const openPopupAddress = () => {
-    if (tokenIsExpired() == true) {
-
-    } else {
+    if (tokenIsExpired() != true) {
       isShowDialogLogin(true)
     }
-    // isShowDialogLogin(true)
   };
   useEffect(() => {
-    isShowDialogLogin(false)
-  }, [loginState]);
+    if(loginStateToken != null){
+      isShowDialogLogin(false)
+    }
+  }, [loginStateToken]);
   const tokenIsExpired = () => {
     if (localStorage.getItem("token") == null) {
       return false
@@ -125,7 +125,7 @@ function MenuBarComp() {
       icon: <LoginOutlined />,
       onClick: () => {
         if (tokenIsExpired() == true) {
-
+          navigate('/personal/' + loginState.userDetail.id)
         } else {
           openPopupAddress()
         }

@@ -6,12 +6,13 @@ export function login(param) {
         try {
             const response = await service.post('/authenticate', param)
             const rsUsrDetail = await service.get('/user-detail', { email: param.login })
-            console.log(rsUsrDetail.data)
             dispatch({ type: 'USR_INF', payload: rsUsrDetail.data.data })
             dispatch({ type: 'TOKEN', payload: response.data })
             localStorage.setItem("token", response.data)
         } catch (err) {
-            console.log(err.response.status)
+            dispatch({ type: 'LOGIN_FAIL', payload: {
+                message: "Sai tên đăng nhập hoặc mật khẩu."
+            }})
         }
     }
 }

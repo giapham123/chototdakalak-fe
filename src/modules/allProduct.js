@@ -5,6 +5,8 @@ import { Card, Button, List, Skeleton } from 'antd';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux'
 import { showAllProductViaCategory, getTotalData } from '../actions/showAllProducts'
+import moment from 'moment/moment';
+import 'moment/locale/vi'
 var count = 1;
 function AllProduct() {
     const dispatch = useDispatch()
@@ -52,6 +54,7 @@ function AllProduct() {
         }
     }, [count]);
     useEffect(() => {
+        count = 1
         setList([])
         setInitLoading(false);
         var param = {
@@ -124,7 +127,7 @@ function AllProduct() {
 
     return (
         <>
-            <div className='container' style={{paddingTop:"10px"}}>
+            <div className='container' style={{ paddingTop: "10px" }}>
                 <Card title={title}>
                     <List
                         grid={{
@@ -155,9 +158,9 @@ function AllProduct() {
                                         >
                                             <Meta className='styleMeta' title={item.name} />
                                             <List.Item.Meta title={<div style={{ color: '#B70404' }}>{String(item.price).replace(
-                                                    /(\d)(?=(?:\d{3})+(?:\.|$))/g,
-                                                    '$1,'
-                                                )} VND</div>} description={item.addr == null ? null : item.addr.split([";"])[2]} />
+                                                /(\d)(?=(?:\d{3})+(?:\.|$))/g,
+                                                '$1,'
+                                            )} vnd</div>} description={item.addr == null ? null : moment(item.updDt).startOf('minutes').fromNow().charAt(0).toUpperCase() + moment(item.updDt).startOf('minutes').fromNow().slice(1) + " " + item.addr.split([";"])[2]} />
                                         </Card>
                                     </Skeleton>
                                 </List.Item>

@@ -3,9 +3,10 @@ import { Dimensions } from 'react-native';
 import '../css/homeStyle.css'
 import { useSelector, useDispatch } from 'react-redux'
 import { MinusCircleOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
-import { Alert, Spin, Switch, Card, Row, Col, Button, Space, InputNumber, message, Form, Input, Select, Typography, Upload } from 'antd';
+import { Spin, Card, Row, Col, Button, Space, InputNumber, message, Form, Input, Select, Typography, Upload } from 'antd';
 import Address from './address';
 import { insertProduct } from '../actions/postPageActions'
+import { notificationController } from '../utils/notify'
 function PostPage() {
     const dispatch = useDispatch()
     const rsCate = useSelector(state => state.cate.allCate.data);
@@ -51,15 +52,11 @@ function PostPage() {
                 form.resetFields();
                 setFileList(null)
                 dispatch({ type: 'product/insertData', payload: null })
-                message.success(postPage.message);
+                notificationController.success(postPage.message)
                 setLoading(false)
-            } else {
-                // message.error(postPage.message);
             }
         }
         setLoading(false)
-        // dispatch({ type: 'product/insertData', payload: null })
-
     }, [postPage]);
     const submitDataEvent = (value) => {
         setLoading(true)

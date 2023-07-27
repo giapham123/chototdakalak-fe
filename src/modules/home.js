@@ -6,7 +6,8 @@ import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux'
 import { getAllCate, getNewestProduct } from '../actions/homeActions'
 import { useEffect } from 'react';
-
+import moment from 'moment/moment';
+import 'moment/locale/vi'
 function Home() {
     const { Meta } = Card;
     const dispatch = useDispatch()
@@ -20,8 +21,10 @@ function Home() {
         <>
             <img
                 style={mystyle}
-                // src={require('../img/pannel.jpg')} 
-                src='https://antimatter.vn/wp-content/uploads/2022/05/background-dep-1-1200x676.jpg'
+
+                src={require('../img/background1.png')}
+            // src={require('../img/background2.jpg')} 
+            // src='%PUBLIC_URL%/background.png'
             />
 
             <div className='container'>
@@ -51,7 +54,7 @@ function Home() {
                         )}
                     />
                 </Card>
-                <Card title="Tin Đăng Mới" style={{ marginTop: '10px', marginBottom:"10px" }}>
+                <Card title="Tin Đăng Mới" style={{ marginTop: '10px', marginBottom: "10px" }}>
                     <List
                         grid={{
                             gutter: 16,
@@ -76,9 +79,9 @@ function Home() {
                                     >
                                         <Meta className='styleMeta' title={item.name} />
                                         <List.Item.Meta title={<div style={{ color: '#B70404' }}>{String(item.price).replace(
-                                                    /(\d)(?=(?:\d{3})+(?:\.|$))/g,
-                                                    '$1,'
-                                                )}</div>} description={item.addr.split([";"])[2]}/>
+                                            /(\d)(?=(?:\d{3})+(?:\.|$))/g,
+                                            '$1,'
+                                        )} vnd</div>} description={moment(item.updDt).startOf('minutes').fromNow().charAt(0).toUpperCase() + moment(item.updDt).startOf('minutes').fromNow().slice(1) + " " + item.addr.split([";"])[2]} />
                                     </Card>
                                 </List.Item>
                             </Link>

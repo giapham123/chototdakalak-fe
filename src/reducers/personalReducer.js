@@ -32,6 +32,12 @@ export default function personalReducer(state = initialState, action) {
                 UpdatePublish:action.payload
             }
         }
+        case 'RESET_UPDATE_PUBLIST': {
+            return {
+                ...state,
+                UpdatePublish:{}
+            }
+        }
         default:
             return state
     }

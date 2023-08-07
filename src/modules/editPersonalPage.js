@@ -92,6 +92,7 @@ function EditPersonalPage() {
     }, [rsUpdatePublish]);
 
     useEffect(() => {
+        console.log(rsPersonalProduct)
         if (count != 1) {
             setLoading(true)
             setList(
@@ -176,8 +177,8 @@ function EditPersonalPage() {
 
     const handleMenuClick = (e) => {
         localStorage.removeItem("token")
-        window.location.reload()
-
+        // window.location.reload()
+        navigate("/")
     };
     const tokenIsExpired = () => {
         if (localStorage.getItem("token") == null) {

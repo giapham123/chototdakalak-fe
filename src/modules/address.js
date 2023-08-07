@@ -77,10 +77,11 @@ const Address = ({ isShow, setIshow, submitAddresss }) => {
                     <Form.Item
                         label="Tỉnh, Thành Phố"
                         name="province"
+                        initialValue='Dak Lak'
                         rules={[{ required: true, message: 'Vui lòng chọn tỉnh, thành phố' }]}
                     >
                         <Select
-                            defaultValue={proviceData[0]}
+                            // defaultValue={proviceData[0]}
                             disabled
                             options={proviceData.map((province) => ({
                                 label: province,

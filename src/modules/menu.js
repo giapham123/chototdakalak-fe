@@ -149,7 +149,8 @@ function MenuBarComp() {
   const handleMenuClick = (e) => {
     if(e.key == 1){
       localStorage.removeItem("token")
-      window.location.reload()
+      // window.location.reload()
+      navigate("/")
     }else{
       navigate('/personal/' + loginState.userDetail.id)
     }

@@ -91,7 +91,6 @@ function PersonalPage() {
             page: count++,
             edit: 1
         }
-        console.log(count)
         dispatch(getPersonalProductPage(param))
         if (count == 1) {
             setLoading(true);

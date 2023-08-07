@@ -78,7 +78,7 @@ const Login = ({ isShow, setIshow }) => {
                             <Button type="primary" htmlType="submit">
                                 Đăng nhập
                             </Button>
-                            <Button type="default" htmlType="submit" style={{ marginLeft: "5px" }} onClick={openPopupRegis}>
+                            <Button type="default" htmlType="button" style={{ marginLeft: "5px" }} onClick={openPopupRegis}>
                                 Đăng ký
                             </Button>
                         </Form.Item>

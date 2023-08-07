@@ -99,7 +99,6 @@ function PostPage() {
                     <Space direction="vertical" size="middle" style={{ display: 'flex', marginTop: '10px', marginBottom: "10px" }}>
                         <Card>
                             <Row >
-                                
                                 <Col xs={22} sm={24} md={24} lg={18} xl={18} align="middle" style={{ Align: "center" }}>
                                     <Form
                                         onFinish={submitDataEvent}
@@ -212,7 +211,7 @@ function PostPage() {
                                                 )}
                                             </Form.List>
                                         </Form.Item>
-                                        <Row >
+                                        {/* <Row >
                                             <Col xs={22} sm={18} md={18} lg={18} xl={20}>
                                                 <Form.Item
                                                     name="addr"
@@ -229,13 +228,13 @@ function PostPage() {
                                             </Col>
                                             <Col xs={4} sm={2} md={2} lg={3} xl={4}>
                                                 <Form.Item>
-                                                    <Button type="primary" onClick={openPopupAddress}>
+                                                    <Button type="link" onClick={openPopupAddress}>
                                                         Thêm địa chỉ
                                                     </Button>
                                                 </Form.Item>
                                             </Col>
                                         </Row>
-                                        <Address isShow={isShowDialogAddress} setIshow={onClose} submitAddresss={dataInAddree} />
+                                        <Address isShow={isShowDialogAddress} setIshow={onClose} submitAddresss={dataInAddree} /> */}
                                         <Form.Item>
                                             <Button type="primary" htmlType="submit">
                                                 Đăng Bài

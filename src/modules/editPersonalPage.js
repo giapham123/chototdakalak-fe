@@ -92,7 +92,6 @@ function EditPersonalPage() {
     }, [rsUpdatePublish]);
 
     useEffect(() => {
-        console.log(rsPersonalProduct)
         if (count != 1) {
             setLoading(true)
             setList(
@@ -202,7 +201,7 @@ function EditPersonalPage() {
                         }}
                         >
                             <Row>
-                                <Col xs={24} sm={24} md={16} lg={16} xl={12} style={{ paddingRight: "50px" }}>
+                                <Col xs={24} sm={24} md={22} lg={22} xl={12} style={{ paddingRight: "50px" }}>
                                     <List.Item>
                                         <List.Item.Meta
                                             avatar={<Avatar src={rsPersonal.img} />}
@@ -212,11 +211,11 @@ function EditPersonalPage() {
 
                                     </List.Item>
                                 </Col>
-                                <Col xs={4} sm={4} md={3} lg={4} xl={4} >
+                                <Col xs={6} sm={6} md={8} lg={6} xl={6} >
                                     <List.Item>
                                         <List.Item.Meta
                                             title="Địa chỉ"
-                                            description="aaaaaaa"
+                                            description={rsPersonal.addr}
                                         />
 
                                     </List.Item>

@@ -60,8 +60,14 @@ function PostPage() {
     }, [postPage]);
     const submitDataEvent = (value) => {
         setLoading(true)
-        if (fileList.length == 0) {
+        if(fileList == undefined){
             message.error("Vui lòng thêm hình ảnh.")
+            setLoading(false)
+            return
+        }
+        if (fileList.length == 0 ) {
+            message.error("Vui lòng thêm hình ảnh.")
+            setLoading(false)
             return
         }
         var formData = new FormData();
